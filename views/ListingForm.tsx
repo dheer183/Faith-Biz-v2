@@ -18,6 +18,7 @@ const ListingForm: React.FC<ListingFormProps> = ({ onComplete, onCancel }) => {
   const [formData, setFormData] = useState({
     name: '',
     category: BusinessCategory.SERVICES as string,
+    keywords: '',
     description: '',
     phone: '',
     address: '',
@@ -35,7 +36,7 @@ const ListingForm: React.FC<ListingFormProps> = ({ onComplete, onCancel }) => {
   const handleAiGenerate = async () => {
     if (!formData.name) return;
     setIsGenerating(true);
-    const desc = await generateBusinessDescription(formData.name, formData.category, "");
+    const desc = await generateBusinessDescription(formData.name, formData.category, formData.keywords);
     setFormData(prev => ({ ...prev, description: desc }));
     setIsGenerating(false);
   };
@@ -99,6 +100,12 @@ const ListingForm: React.FC<ListingFormProps> = ({ onComplete, onCancel }) => {
                     {Object.values(BusinessCategory).map(c => <option key={c} value={c}>{c}</option>)}
                   </select>
                 </div>
+                
+                <div className="col-span-full space-y-2">
+                  <label className="text-sm font-medium text-gray-700">Key Services / Tags <span className="text-gray-400 font-normal">(Optional, helps AI write your bio)</span></label>
+                  <input name="keywords" value={formData.keywords} onChange={handleInputChange} className="w-full border border-gray-300 rounded-lg p-2.5 focus:ring-2 focus:ring-red-500 outline-none" placeholder="e.g. Wedding Counseling, Organic Coffee, Youth Events" />
+                </div>
+
                 <div className="col-span-full space-y-2">
                   <label className="text-sm font-medium text-gray-700 flex justify-between">
                     Description
